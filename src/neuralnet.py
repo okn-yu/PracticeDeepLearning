@@ -1,5 +1,5 @@
 import numpy as np
-from ActivationFunction import sigmoid
+from src.ActivationFunction import sigmoid
 
 
 def init_network():
