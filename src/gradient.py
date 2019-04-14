@@ -1,4 +1,5 @@
 import numpy as np
+from src.activation_function import sigmoid
 
 LR = 0.01
 STEP_NUM = 100
@@ -11,8 +12,11 @@ def numerical_diff(f, x):
 def numerical_gradient(f, x):
     h = 1e-4
     grad = np.zeros_like(x)
+    it = np.nditer(x, flags=['multi_index'], op_flags=['readwrite'])
 
-    for idx in range(x.size):
+    while not it.finished:
+        idx = it.multi_index
+
         tmp_val = x[idx]
         x[idx] = tmp_val + h
         fxh1 = f(x)
@@ -22,9 +26,12 @@ def numerical_gradient(f, x):
 
         grad[idx] = (fxh1 - fxh2) / (2 * h)
         x[idx] = tmp_val
+        it.iternext()
 
     return grad
 
+def sigmoid_grad(x):
+    return (1.0 - sigmoid(x)) * sigmoid(x)
 
 def gradient_descent(f, init_x):
     x = init_x
