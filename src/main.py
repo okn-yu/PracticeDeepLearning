@@ -5,7 +5,7 @@ from src.neuralnet import TwoLayerNet
 
 (x_train, t_train), (x_test, t_test) = mn.load_mnist(normalize=True, one_hot_label=True)
 
-# HyperParameters
+#HyperParameters
 ITERS_NUM = 10000
 TRAIN_SIZE = x_train.shape[0]
 BATCH_SIZE = 100
