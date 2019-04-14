@@ -15,11 +15,14 @@ def sigmoid(x):
 
 
 def softmax(x):
-    max = np.max(x)
-    exp = np.exp(x - max)
-    sum_exp = np.sum(exp)
+    if x.ndim == 2:
+        x = x.T
+        x = x - np.max(x, axis=0)
+        y = np.exp(x) / np.sum(np.exp(x), axis=0)
+        return y.T
 
-    return exp / sum_exp
+    x = x - np.max(x)
+    return np.exp(x) / np.sum(np.exp(x))
 
 
 def step_function(x):

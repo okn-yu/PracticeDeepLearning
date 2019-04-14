@@ -5,7 +5,7 @@ from src.neuralnet import TwoLayerNet
 
 (x_train, t_train), (x_test, t_test) = mn.load_mnist(normalize=True, one_hot_label=True)
 
-#HyperParameters
+# HyperParameters
 ITERS_NUM = 10000
 TRAIN_SIZE = x_train.shape[0]
 BATCH_SIZE = 100
@@ -38,12 +38,12 @@ for i in range(ITERS_NUM):
         test_acc_list.append(test_acc)
         print("train_acc...%s, test_acc...%s" % (train_acc, test_acc))
 
-# markers = {'train': 'o', 'test': 's'}
-# x = np.arange(len(train_acc_list))
-# plt.plot(x, train_acc_list, label='train acc')
-# plt.plot(x, test_acc_list, label='test acc', linestyle='--')
-# plt.xlabel("epochs")
-# plt.ylabel("accuracy")
-# plt.ylim(0, 1.0)
-# plt.legend(loc='lower right')
-# plt.show()
+markers = {'train': 'o', 'test': 's'}
+x = np.arange(len(train_acc_list))
+plt.plot(x, train_acc_list, label='train acc')
+plt.plot(x, test_acc_list, label='test acc', linestyle='--')
+plt.xlabel("epochs")
+plt.ylabel("accuracy")
+plt.ylim(0, 1.0)
+plt.legend(loc='lower right')
+plt.show()
