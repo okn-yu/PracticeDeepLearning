@@ -1,5 +1,38 @@
 import numpy as np
-from src.ActivationFunction import sigmoid
+from src.activation_function import sigmoid, softmax
+from src.loss_function import cross_entropy_error
+
+class NewralNet():
+
+    def __init__(self, input_size, hidden_size, output_size):
+
+        self.params = {}
+
+    def predict(self, x):
+        w1, w2 = self.params['w1'], self.params['w2']
+        b1, b2 = self.params['b1'], self.params['b2']
+
+        a1 = np.dot(x, w1) + b1
+        z1 = sigmoid(a1)
+        a2 = np.dot(x, w2) + b2
+        y = softmax(a2)
+
+        return y
+
+    def loss(self, x, t):
+        y = self.predict(x)
+
+        return cross_entropy_error(y, t)
+
+    def accuracy(self, x, t):
+        y = self.predict(x)
+        y = np.argmax(y, axis=1)
+        t = np.argmax(y, axis=1)
+
+        accuracy = np.sum(y==t) / float(x.shape[0])
+        return accuracy
+
+    def numerical_gradient(self, x, t):
 
 
 def init_network():
@@ -24,13 +57,11 @@ def forward(network, x):
     z2 = sigmoid(a2)
     a3 = np.dot(z2, w3) + b3
 
-    y = identify_function(a3)
+    #y = identify_function(a3)
+    #return y
 
-    return y
 
 
-def identify_function(x):
-    return x
 
 
 network = init_network()
