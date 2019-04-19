@@ -37,9 +37,9 @@ if __name__ == '__main__':
     y4 = step_function(x)
     y5 = relu(x)
 
-    #plt.plot(x, y1)
-    #plt.plot(x, y2)
+    plt.plot(x, y1)
+    plt.plot(x, y2)
     plt.plot(x, y3)
-    #plt.plot(x, y4)
-    #plt.plot(x, y5)
+    plt.plot(x, y4)
+    plt.plot(x, y5)
     plt.show()
