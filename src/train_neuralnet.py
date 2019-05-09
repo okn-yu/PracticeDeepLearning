@@ -8,7 +8,7 @@ from debug.debug import BATCH_MASK
 (x_train, t_train), (x_test, t_test) = mn.load_mnist(normalize=True, one_hot_label=True)
 
 # HyperParameters
-ITERS_NUM = 2
+ITERS_NUM = 1
 TRAIN_SIZE = x_train.shape[0]
 BATCH_SIZE = 100
 LEARNING_RATE = 0.1

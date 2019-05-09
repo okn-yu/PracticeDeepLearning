@@ -89,6 +89,10 @@ class AffineLayer:
         return out
 
     def backward(self, dout):
+
+        print("dout[7][7]")
+        print(dout[7][7])
+
         dx = np.dot(dout, self.W.T)
         self.dW = np.dot(self.x.T, dout)
         self.db = np.sum(dout, axis=0)
