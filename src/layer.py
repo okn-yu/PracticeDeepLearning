@@ -48,6 +48,10 @@ class ReluLayer:
         return out
 
     def backward(self, dout):
+
+        print("dout[7][7]")
+        print(dout[7][7])
+
         dout[self.mask] = 0
         dx = dout
 
