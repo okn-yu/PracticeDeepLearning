@@ -11,8 +11,8 @@ def mean_square_error(y, t):
 
 
 def cross_entropy_error(y, t):
-    print(y[0][0:10])
-    print(y.shape)
+    print(y[56][0:10])
+    print(t[56][0:10])
 
     delta = 1e-7
     loss =  -np.sum(t * np.log(y + delta))
