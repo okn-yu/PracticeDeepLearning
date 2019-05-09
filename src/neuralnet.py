@@ -81,9 +81,6 @@ class TwoLayerNet():
         grads = {}
         grads['W1'] = self.layers['Affine1'].dW
         grads['b1'] = self.layers['Affine1'].db
-
-        print("Affine2-dW:%s" % self.layers['Affine2'].dW[0][0])
-
         grads['W2'] = self.layers['Affine2'].dW
         grads['b2'] = self.layers['Affine2'].db
 
