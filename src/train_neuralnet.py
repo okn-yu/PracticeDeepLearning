@@ -6,7 +6,7 @@ from src.neuralnet import TwoLayerNet
 (x_train, t_train), (x_test, t_test) = mn.load_mnist(normalize=True, one_hot_label=True)
 
 # HyperParameters
-ITERS_NUM = 1
+ITERS_NUM = 10000
 TRAIN_SIZE = x_train.shape[0]
 BATCH_SIZE = 100
 LEARNING_RATE = 0.1
@@ -20,8 +20,8 @@ network = TwoLayerNet(input_size=784, hidden_size=50, output_size=10)
 
 for i in range(ITERS_NUM):
     batch_mask = np.random.choice(TRAIN_SIZE, BATCH_SIZE)
-    print("batch_mask:%s" % batch_mask) #batch_mask:[32596 31310  7414 38075 32220
-    continue
+    #print("batch_mask:%s" % batch_mask) #batch_mask:[32596 31310  7414 38075 32220
+    #continue
     x_batch = x_train[batch_mask]
     t_batch = t_train[batch_mask]
 
