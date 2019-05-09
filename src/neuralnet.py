@@ -6,7 +6,7 @@ from src.gradient import numerical_gradient, sigmoid_grad
 from src.layer import AffineLayer, SoftmaxWithLossLayer, ReluLayer
 
 WEIGHT_INIT_STD = 0.01
-
+np.random.seed(seed=100)
 
 class TwoLayerNet():
 
