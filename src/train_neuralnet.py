@@ -8,7 +8,7 @@ from debug.debug import BATCH_MASK
 (x_train, t_train), (x_test, t_test) = mn.load_mnist(normalize=True, one_hot_label=True)
 
 # HyperParameters
-ITERS_NUM = 1
+ITERS_NUM = 2
 TRAIN_SIZE = x_train.shape[0]
 BATCH_SIZE = 100
 LEARNING_RATE = 0.1
@@ -34,7 +34,7 @@ for i in range(ITERS_NUM):
     #loss = network.loss(x_batch, t_batch)
     #train_loss_list.append(loss)
 
-    if i % ITER_PER_EPOC == 0:
+    if True: #i % ITER_PER_EPOC == 0:
         train_acc = network.accuracy(x_train, t_train)
         test_acc = network.accuracy(x_test, t_test)
         train_acc_list.append(train_acc)
