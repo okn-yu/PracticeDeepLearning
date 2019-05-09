@@ -49,9 +49,6 @@ class ReluLayer:
 
     def backward(self, dout):
 
-        print("dout[7][7]")
-        print(dout[7][7])
-
         dout[self.mask] = 0
         dx = dout
 
@@ -94,15 +91,10 @@ class AffineLayer:
 
     def backward(self, dout):
 
-        print("dout[7][7]")
-        print(dout[7][7])
-
         dx = np.dot(dout, self.W.T)
         self.dW = np.dot(self.x.T, dout)
-
-        print("self.x[7][7]:%s" % self.x[7][7])
-        print("dW[7][7]...%s" % self.dW[7][7])
         self.db = np.sum(dout, axis=0)
+        print("self.db")
         print(self.db)
 
         dx = dx.reshape(*self.original_x_shape)
