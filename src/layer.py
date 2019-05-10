@@ -21,21 +21,6 @@ class ReluLayer:
         return dx
 
 
-class SigmoidLayer:
-    def __init__(self):
-        self.out = None
-
-    def forward(self, x):
-        self.out = 1 / (1 + np.exp(-x))
-
-        return self.out
-
-    def backward(self, dout):
-        dx = dout * (1.0 - self.out) * self.out
-
-        return dx
-
-
 class AffineLayer:
     def __init__(self, W, b):
         self.W = W
