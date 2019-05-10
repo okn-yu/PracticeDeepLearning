@@ -13,10 +13,10 @@ def softmax(x):
     # if x  == matrix
     # TODO: modify 'x.T -> x'. and 'y.T -> y'.
     if x.ndim == 2:
-        x = x.T
+        x = x
         x = x - np.max(x, axis=0)
         y = np.exp(x) / np.sum(np.exp(x), axis=0)
-        return y.T
+        return y
     # if x == vector
     else:
         x = x - np.max(x)

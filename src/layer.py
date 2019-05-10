@@ -46,15 +46,15 @@ class AffineLayer:
 
     def forward(self, x):
         self.x = x
-        out = np.dot(self.x, self.W) + self.b
+        out = np.dot(self.W, self.x) + self.b.reshape(self.W.shape[0], 1)
 
         return out
 
     def backward(self, dout):
-        self.dW = np.dot(self.x.T, dout)
-        self.db = np.sum(dout, axis=0)
+        self.dW = np.dot(dout, self.x.T)
+        self.db = np.sum(dout, axis=1)
 
-        dx = np.dot(dout, self.W.T)
+        dx = np.dot(self.W.T, dout)
         return dx
 
 class SoftmaxWithLossLayer:
@@ -71,12 +71,6 @@ class SoftmaxWithLossLayer:
         return self.loss
 
     def backward(self, dout=1):
-        batch_size = self.t.shape[0]
-        if self.t.size == self.y.size:
-            dx = (self.y - self.t) / batch_size
-        else:
-            dx = self.y.copy()
-            dx[np.arange(batch_size), self.t] -= 1
-            dx = dx / batch_size
-
+        batch_size = self.t.shape[1]
+        dx = (self.y - self.t) / batch_size
         return dx

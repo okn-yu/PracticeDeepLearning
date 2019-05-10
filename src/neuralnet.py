@@ -12,9 +12,9 @@ class TwoLayerNet():
 
     def __init__(self, input_size, hidden_size, output_size):
         self.params = {}
-        self.params['W1'] = WEIGHT_INIT_STD * np.random.randn(input_size, hidden_size)
+        self.params['W1'] = WEIGHT_INIT_STD * np.random.randn(hidden_size, input_size)
         self.params['b1'] = np.zeros(hidden_size)
-        self.params['W2'] = WEIGHT_INIT_STD * np.random.randn(hidden_size, output_size)
+        self.params['W2'] = WEIGHT_INIT_STD * np.random.randn(output_size, hidden_size)
         self.params['b2'] = np.zeros(output_size)
 
         self.layers = OrderedDict()
@@ -38,11 +38,10 @@ class TwoLayerNet():
 
     def accuracy(self, x, t):
         y = self.predict(x)
-        y = np.argmax(y, axis=1)
-        # t = np.argmax(t, axis=1)
-        if t.ndim != 1: t = np.argmax(t, axis=1)
+        y = np.argmax(y, axis=0)
+        t = np.argmax(t, axis=0)
 
-        accuracy = np.sum(y == t) / float(x.shape[0])
+        accuracy = (np.sum(y == t) / float(x.shape[1]))
         return accuracy
 
 
