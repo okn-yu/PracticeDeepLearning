@@ -30,9 +30,6 @@ for i in range(ITERS_NUM):
     for key in ('W1', 'b1', 'W2', 'b2'):
         network.params[key] -= LEARNING_RATE * grad[key]
 
-    #loss = network.loss(x_batch, t_batch)
-    #train_loss_list.append(loss)
-
     if i % ITER_PER_EPOC == 0:
         train_acc = network.accuracy(x_train, t_train)
         test_acc = network.accuracy(x_test, t_test)
@@ -48,4 +45,4 @@ plt.xlabel("epochs")
 plt.ylabel("accuracy")
 plt.ylim(0, 1.0)
 plt.legend(loc='lower right')
-#plt.show()
+plt.show()
