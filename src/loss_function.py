@@ -1,10 +1,10 @@
 import numpy as np
 
-def mean_square_error(y, t):
-    return 0.5 * np.sum((y - t) ** 2)
+
+def mean_square_error(x, t):
+    return 0.5 * np.sum((x - t) ** 2)
 
 
-def cross_entropy_error(y, t):
-    delta = 1e-7
-    loss =  -np.sum(t * np.log(y + delta))
+def cross_entropy_error(x, t):
+    loss = -np.sum(t.T * np.log(x.T + 1e-7))
     return loss
