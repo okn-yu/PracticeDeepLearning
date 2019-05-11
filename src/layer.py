@@ -3,12 +3,12 @@ from src.activation_function import softmax, sigmoid
 from src.loss_function import cross_entropy_error
 
 WEIGHT_INIT_STD = 0.01
-LEARNING_RATE = 0.1
+LEARNING_RATE = 0.3
 
 
 class Layer:
-    def __init__(self, output_size, input_size, activate_function):
-        self.affine_layer = AffineLayer(output_size, input_size)
+    def __init__(self, output_dim, input_dim, activate_function):
+        self.affine_layer = AffineLayer(output_dim, input_dim)
         self.activation_layer = self.set_activation_layer(activate_function)
 
     def set_activation_layer(self, activate_function):
@@ -41,9 +41,9 @@ class Layer:
 
 
 class AffineLayer:
-    def __init__(self, output_size, input_size):
-        self.W = WEIGHT_INIT_STD * np.random.randn(output_size, input_size)
-        self.b = np.zeros(output_size)
+    def __init__(self, output_dim, input_dim):
+        self.W = WEIGHT_INIT_STD * np.random.randn(output_dim, input_dim)
+        self.b = np.zeros(output_dim)
         self.x = None
         self.dW = None
         self.db = None
