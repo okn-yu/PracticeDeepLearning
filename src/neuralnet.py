@@ -15,12 +15,11 @@ class NeuralNet():
 
     def predict(self, x):
 
-        x = self.layers[0].forward(x)
-        x = self.layers[1].forward(x)
-        x = self.layers[2].forward(x)
-        x = self.layers[3].forward(x)
+        for layer in self.layers:
+            x = layer.forward(x)
 
         return x
+
 
     def loss(self, x, t):
         y = self.predict(x)
