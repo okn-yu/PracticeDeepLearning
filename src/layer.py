@@ -2,24 +2,6 @@ import numpy as np
 from src.activation_function import softmax
 from src.loss_function import cross_entropy_error
 
-class ReluLayer:
-    def __init__(self):
-        self.mask = None
-
-    def forward(self, x):
-        self.mask = (x <= 0)
-        out = x.copy()
-        out[self.mask] = 0
-
-        return out
-
-    def backward(self, dout):
-
-        dout[self.mask] = 0
-        dx = dout
-
-        return dx
-
 
 class AffineLayer:
     def __init__(self, W, b):
@@ -42,6 +24,25 @@ class AffineLayer:
         dx = np.dot(self.W.T, dout)
         return dx
 
+
+class ReluLayer:
+    def __init__(self):
+        self.mask = None
+
+    def forward(self, x):
+        self.mask = (x <= 0)
+        out = x.copy()
+        out[self.mask] = 0
+
+        return out
+
+    def backward(self, dout):
+        dout[self.mask] = 0
+        dx = dout
+
+        return dx
+
+
 class SoftmaxWithLossLayer:
     def __init__(self):
         self.loss = None
@@ -50,7 +51,7 @@ class SoftmaxWithLossLayer:
 
     def forward(self, x, t):
         self.t = t
-        self. y = softmax(x)
+        self.y = softmax(x)
         self.loss = cross_entropy_error(self.y, self.t)
 
         return self.loss
