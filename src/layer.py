@@ -48,6 +48,13 @@ class AffineLayer:
         self.dW = None
         self.db = None
 
+        """"
+        # Momentum
+        self.momentum = 0.9
+        self.v_W = np.zeros((output_dim, input_dim))
+        self.v_b = np.zeros(output_dim)
+        """
+
     def forward(self, x):
         self.x = x
         out = np.dot(self.W, self.x) + self.b.reshape(self.W.shape[0], 1)
@@ -62,8 +69,19 @@ class AffineLayer:
         return dx
 
     def train(self):
+
+        # SGD
         self.W -= LEARNING_RATE * self.dW
         self.b -= LEARNING_RATE * self.db
+
+        """
+        # Momentum
+        self.v_W = self.momentum * self.v_W - 0.01 * self.dW
+        self.W += self.v_W
+
+        self.v_b = self.momentum * self.v_b - 0.01 * self.db
+        self.b += self.v_b
+        """
 
 
 class ReluLayer:
