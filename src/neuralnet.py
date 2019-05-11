@@ -6,7 +6,7 @@ from src.layer import AffineLayer, SoftmaxWithLossLayer, ReluLayer
 
 
 WEIGHT_INIT_STD = 0.01
-np.random.seed(seed=100)
+LEARNING_RATE = 0.1
 
 class TwoLayerNet():
 
@@ -44,7 +44,7 @@ class TwoLayerNet():
         return accuracy
 
 
-    def gradient(self, x, t):
+    def train(self, x, t):
 
         # forward
         self.loss(x, t)
@@ -63,5 +63,8 @@ class TwoLayerNet():
         grads['b1'] = self.layers['Affine1'].db
         grads['W2'] = self.layers['Affine2'].dW
         grads['b2'] = self.layers['Affine2'].db
+
+        for key in ('W1', 'b1', 'W2', 'b2'):
+            self.params[key] -= LEARNING_RATE * grads[key]
 
         return grads
