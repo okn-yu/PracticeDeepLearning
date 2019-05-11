@@ -1,14 +1,12 @@
 import numpy as np
 from collections import OrderedDict
-from src.activation_function import sigmoid, softmax
-from src.loss_function import cross_entropy_error
 from src.layer import AffineLayer, SoftmaxWithLossLayer, ReluLayer
 
 
 WEIGHT_INIT_STD = 0.01
 LEARNING_RATE = 0.1
 
-class TwoLayerNet():
+class NeuralNet():
 
     def __init__(self, input_size, hidden_size, output_size):
         self.params = {}

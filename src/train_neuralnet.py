@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import dataset.mnist as mn
-from src.neuralnet import TwoLayerNet
+from src.neuralnet import NeuralNet
 
 from debug.debug import BATCH_MASK
 
@@ -17,7 +17,7 @@ train_loss_list = []
 train_acc_list = []
 test_acc_list = []
 
-nnet = TwoLayerNet(input_size=784, hidden_size=50, output_size=10)
+nnet = NeuralNet(input_size=784, hidden_size=50, output_size=10)
 
 for i in range(ITERS_NUM):
     batch_mask = np.random.choice(TRAIN_SIZE, BATCH_SIZE)
