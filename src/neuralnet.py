@@ -1,23 +1,35 @@
 import numpy as np
-from src.layer import AffineLayer, ReluLayer, SoftmaxWithLossLayer, SigmoidLayer
+from src.layer import AffineLayer, ReluLayer, SoftmaxWithLossLayer, SigmoidLayer, Layer
 
 
 class NeuralNet():
     def __init__(self, input_size, hidden_size, output_size):
         self.layers = []
+        #self.last_layer = self.layers[-1]
 
-        self.layers.append(AffineLayer(hidden_size, input_size))
-        self.layers.append(ReluLayer())
-        #self.layers.append((SigmoidLayer()))
+        self.layers.append(Layer(hidden_size, input_size, 'relu'))
+        self.layers.append(Layer(output_size, hidden_size, 'softmax'))
 
+        # self.layers.append(AffineLayer(hidden_size, input_size))
+        # self.layers.append(ReluLayer())
+        # #self.layers.append((SigmoidLayer()))
+        #
+        #
+        # #self.layers.append(AffineLayer(hidden_size, hidden_size))
+        # #self.layers.append(ReluLayer())
+        # #self.layers.append((SigmoidLayer()))
+        #
+        # self.layers.append(AffineLayer(hidden_size, hidden_size))
+        # self.layers.append(ReluLayer())
+        #
+        # self.layers.append(AffineLayer(hidden_size, hidden_size))
+        # self.layers.append(ReluLayer())
+        #
+        # self.layers.append(AffineLayer(output_size, hidden_size))
+        # self.layers.append(SoftmaxWithLossLayer())
 
-        #self.layers.append(AffineLayer(hidden_size, hidden_size))
-        #self.layers.append(ReluLayer())
-        #self.layers.append((SigmoidLayer()))
-
-
-        self.layers.append(AffineLayer(output_size, hidden_size))
-        self.layers.append(SoftmaxWithLossLayer())
+    def add_layer(self, layer):
+        self.layers.append(layer)
 
     def train(self, x, t):
         self._forward(x)

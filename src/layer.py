@@ -6,6 +6,40 @@ WEIGHT_INIT_STD = 0.01
 LEARNING_RATE = 0.1
 
 
+class Layer:
+    def __init__(self, output_size, input_size, activate_function):
+        self.affine_layer = AffineLayer(output_size, input_size)
+        self.activation_layer = self.set_activation_layer(activate_function)
+
+    def set_activation_layer(self, activate_function):
+        if activate_function == 'relu':
+            return ReluLayer()
+        elif activate_function == 'sigmoid':
+            return SigmoidLayer()
+        elif activate_function == 'softmax':
+            return SoftmaxWithLossLayer()
+        else:
+            raise Exception
+
+    def forward(self, x):
+        u = self.affine_layer.forward(x)
+        z = self.activation_layer.forward(u)
+
+        return z
+
+    def backward(self, z):
+        u = self.activation_layer.backward(z)
+        x = self.affine_layer.backward(u)
+
+        return x
+
+    def train(self):
+        self.affine_layer.train()
+
+    def loss(self, t):
+        return self.activation_layer.loss(t)
+
+
 class AffineLayer:
     def __init__(self, output_size, input_size):
         self.W = WEIGHT_INIT_STD * np.random.randn(output_size, input_size)
@@ -48,8 +82,6 @@ class ReluLayer:
 
         return dx
 
-    def train(self):
-        pass
 
 class SigmoidLayer:
     def __init__(self):
@@ -66,8 +98,6 @@ class SigmoidLayer:
 
         return dx
 
-    def train(self):
-        pass
 
 class SoftmaxWithLossLayer:
     def __init__(self):
@@ -86,6 +116,3 @@ class SoftmaxWithLossLayer:
         batch_size = self.t.shape[1]
         dx = (self.y - self.t) / batch_size
         return dx
-
-    def train(self):
-        pass
