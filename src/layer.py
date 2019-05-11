@@ -1,5 +1,5 @@
 import numpy as np
-from src.activation_function import softmax
+from src.activation_function import softmax, sigmoid
 from src.loss_function import cross_entropy_error
 
 WEIGHT_INIT_STD = 0.01
@@ -48,6 +48,26 @@ class ReluLayer:
 
         return dx
 
+    def train(self):
+        pass
+
+class SigmoidLayer:
+    def __init__(self):
+        self.y = None
+
+    def forward(self, x):
+        y = sigmoid(x)
+        self.y = y
+
+        return y
+
+    def backward(self, dout):
+        dx = dout * (1.0 - self.y) * self.y
+
+        return dx
+
+    def train(self):
+        pass
 
 class SoftmaxWithLossLayer:
     def __init__(self):
@@ -66,3 +86,6 @@ class SoftmaxWithLossLayer:
         batch_size = self.t.shape[1]
         dx = (self.y - self.t) / batch_size
         return dx
+
+    def train(self):
+        pass

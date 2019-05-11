@@ -1,12 +1,21 @@
 import numpy as np
-from src.layer import AffineLayer, ReluLayer, SoftmaxWithLossLayer
+from src.layer import AffineLayer, ReluLayer, SoftmaxWithLossLayer, SigmoidLayer
 
 
 class NeuralNet():
     def __init__(self, input_size, hidden_size, output_size):
         self.layers = []
+
         self.layers.append(AffineLayer(hidden_size, input_size))
         self.layers.append(ReluLayer())
+        #self.layers.append((SigmoidLayer()))
+
+
+        #self.layers.append(AffineLayer(hidden_size, hidden_size))
+        #self.layers.append(ReluLayer())
+        #self.layers.append((SigmoidLayer()))
+
+
         self.layers.append(AffineLayer(output_size, hidden_size))
         self.layers.append(SoftmaxWithLossLayer())
 
@@ -14,9 +23,7 @@ class NeuralNet():
         self._forward(x)
         self._loss(t)
         self._backward(dout=1)
-
-        self.layers[0].train()
-        self.layers[2].train()
+        self._train()
 
     def _forward(self, x):
         for layer in self.layers:
@@ -25,11 +32,15 @@ class NeuralNet():
         return x
 
     def _loss(self, t):
-        return self.layers[3].loss(t)
+        return self.layers[-1].loss(t)
 
     def _backward(self, dout):
         for layer in reversed(self.layers):
             dout = layer.backward(dout)
+
+    def _train(self):
+        for layer in self.layers:
+            layer.train()
 
     def test(self, x, t):
         y = self._forward(x)
