@@ -1,6 +1,5 @@
 import numpy as np
-from collections import OrderedDict
-from src.layer import AffineLayer, SoftmaxWithLossLayer, ReluLayer
+from src.layer import AffineLayer, ReluLayer, SoftmaxWithLossLayer
 
 
 class NeuralNet():
@@ -14,10 +13,10 @@ class NeuralNet():
     def train(self, x, t):
         self._forward(x)
         self._loss(t)
-        self._backkward(dout=1)
+        self._backward(dout=1)
 
-        self.layers[0].update()
-        self.layers[2].update()
+        self.layers[0].train()
+        self.layers[2].train()
 
     def _forward(self, x):
         for layer in self.layers:
@@ -28,7 +27,7 @@ class NeuralNet():
     def _loss(self, t):
         return self.layers[3].loss(t)
 
-    def _backkward(self, dout):
+    def _backward(self, dout):
         for layer in reversed(self.layers):
             dout = layer.backward(dout)
 
@@ -39,4 +38,3 @@ class NeuralNet():
 
         accuracy = (np.sum(y == t) / float(x.shape[1]))
         return accuracy
-

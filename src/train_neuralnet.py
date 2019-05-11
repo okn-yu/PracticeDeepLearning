@@ -2,8 +2,6 @@ import numpy as np
 import dataset.mnist as mn
 from src.neuralnet import NeuralNet
 
-from debug.debug import BATCH_MASK
-
 (x_train, t_train), (x_test, t_test) = mn.load_mnist(normalize=True, one_hot_label=True)
 
 # HyperParameters

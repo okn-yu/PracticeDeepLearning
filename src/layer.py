@@ -5,6 +5,7 @@ from src.loss_function import cross_entropy_error
 WEIGHT_INIT_STD = 0.01
 LEARNING_RATE = 0.1
 
+
 class AffineLayer:
     def __init__(self, output_size, input_size):
         self.W = WEIGHT_INIT_STD * np.random.randn(output_size, input_size)
@@ -26,8 +27,7 @@ class AffineLayer:
         dx = np.dot(self.W.T, dout)
         return dx
 
-    def update(self):
-
+    def train(self):
         self.W -= LEARNING_RATE * self.dW
         self.b -= LEARNING_RATE * self.db
 
@@ -61,7 +61,6 @@ class SoftmaxWithLossLayer:
     def loss(self, t):
         self.t = t
         return cross_entropy_error(self.y, self.t)
-
 
     def backward(self, dout=1):
         batch_size = self.t.shape[1]
