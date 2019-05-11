@@ -3,7 +3,7 @@ from src.activation_function import softmax, sigmoid
 from src.loss_function import cross_entropy_error
 
 WEIGHT_INIT_STD = 0.01
-LEARNING_RATE = 0.3
+LEARNING_RATE = 0.1
 
 
 class Layer:
@@ -55,6 +55,13 @@ class AffineLayer:
         self.v_b = np.zeros(output_dim)
         """
 
+        """
+        # AdaGrad
+        self.h_W = np.zeros((output_dim, input_dim))
+        self.h_b = np.zeros(output_dim)
+        self.lr = 0.1
+        """
+
     def forward(self, x):
         self.x = x
         out = np.dot(self.W, self.x) + self.b.reshape(self.W.shape[0], 1)
@@ -70,9 +77,11 @@ class AffineLayer:
 
     def train(self):
 
+        #""""
         # SGD
         self.W -= LEARNING_RATE * self.dW
         self.b -= LEARNING_RATE * self.db
+        #"""
 
         """
         # Momentum
@@ -82,6 +91,17 @@ class AffineLayer:
         self.v_b = self.momentum * self.v_b - 0.01 * self.db
         self.b += self.v_b
         """
+
+        """
+        # AdaGard
+        self.h_W += self.dW * self.dW
+        self.W -= self.lr * self.dW / np.sqrt(self.h_W + 1e-7)
+
+        self.h_b += self.db * self.db
+        self.b -= self.lr * self.db / np.sqrt(self.h_b + 1e-7)
+        """
+
+
 
 
 class ReluLayer:
