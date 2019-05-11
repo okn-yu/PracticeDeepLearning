@@ -11,6 +11,14 @@ class NeuralNet():
         self.layers.append(AffineLayer(output_size, hidden_size))
         self.layers.append(SoftmaxWithLossLayer())
 
+    def train(self, x, t):
+        self._forward(x)
+        self._loss(t)
+        self._backkward(dout=1)
+
+        self.layers[0].update()
+        self.layers[2].update()
+
     def _forward(self, x):
         for layer in self.layers:
             x = layer.forward(x)
@@ -24,22 +32,11 @@ class NeuralNet():
         for layer in reversed(self.layers):
             dout = layer.backward(dout)
 
-    def accuracy(self, x, t):
+    def test(self, x, t):
         y = self._forward(x)
         y = np.argmax(y, axis=0)
         t = np.argmax(t, axis=0)
 
         accuracy = (np.sum(y == t) / float(x.shape[1]))
         return accuracy
-
-
-    def train(self, x, t):
-
-        self._forward(x)
-        self._loss(t)
-        self._backkward(dout=1)
-
-        #reversed(self.layers)
-        self.layers[0].update()
-        self.layers[2].update()
 
