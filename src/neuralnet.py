@@ -18,13 +18,14 @@ class NeuralNet():
         x = self.layers[0].forward(x)
         x = self.layers[1].forward(x)
         x = self.layers[2].forward(x)
+        x = self.layers[3].forward(x)
 
         return x
 
     def loss(self, x, t):
         y = self.predict(x)
 
-        return self.layers[3].forward(y, t)
+        return self.layers[3].loss(t)
 
     def accuracy(self, x, t):
         y = self.predict(x)
@@ -38,6 +39,7 @@ class NeuralNet():
     def train(self, x, t):
 
         self.loss(x, t)
+
         dout = 1
         for layer in reversed(self.layers):
             dout = layer.backward(dout)

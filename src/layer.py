@@ -51,16 +51,17 @@ class ReluLayer:
 
 class SoftmaxWithLossLayer:
     def __init__(self):
-        self.loss = None
         self.y = None
         self.t = None
 
-    def forward(self, x, t):
-        self.t = t
+    def forward(self, x):
         self.y = softmax(x)
-        self.loss = cross_entropy_error(self.y, self.t)
+        return self.y
 
-        return self.loss
+    def loss(self, t):
+        self.t = t
+        return cross_entropy_error(self.y, self.t)
+
 
     def backward(self, dout=1):
         batch_size = self.t.shape[1]
