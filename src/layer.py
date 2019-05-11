@@ -2,11 +2,13 @@ import numpy as np
 from src.activation_function import softmax
 from src.loss_function import cross_entropy_error
 
+WEIGHT_INIT_STD = 0.01
+LEARNING_RATE = 0.1
 
 class AffineLayer:
-    def __init__(self, W, b):
-        self.W = W
-        self.b = b
+    def __init__(self, output_size, input_size):
+        self.W = WEIGHT_INIT_STD * np.random.randn(output_size, input_size)
+        self.b = np.zeros(output_size)
         self.x = None
         self.dW = None
         self.db = None
@@ -23,6 +25,11 @@ class AffineLayer:
 
         dx = np.dot(self.W.T, dout)
         return dx
+
+    def update(self):
+
+        self.W -= LEARNING_RATE * self.dW
+        self.b -= LEARNING_RATE * self.db
 
 
 class ReluLayer:

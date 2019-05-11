@@ -3,35 +3,28 @@ from collections import OrderedDict
 from src.layer import AffineLayer, SoftmaxWithLossLayer, ReluLayer
 
 
-WEIGHT_INIT_STD = 0.01
-LEARNING_RATE = 0.1
-
 class NeuralNet():
 
     def __init__(self, input_size, hidden_size, output_size):
-        self.params = {}
-        self.params['W1'] = WEIGHT_INIT_STD * np.random.randn(hidden_size, input_size)
-        self.params['b1'] = np.zeros(hidden_size)
-        self.params['W2'] = WEIGHT_INIT_STD * np.random.randn(output_size, hidden_size)
-        self.params['b2'] = np.zeros(output_size)
 
-        self.layers = OrderedDict()
-        self.layers['Affine1'] = AffineLayer(self.params['W1'], self.params['b1'])
-        self.layers['Relu'] = ReluLayer()
-        self.layers['Affine2'] = AffineLayer(self.params['W2'], self.params['b2'])
-        self.lastLayer = SoftmaxWithLossLayer()
+        self.layers = []
+        self.layers.append(AffineLayer(hidden_size, input_size))
+        self.layers.append(ReluLayer())
+        self.layers.append(AffineLayer(output_size, hidden_size))
+        self.layers.append(SoftmaxWithLossLayer())
 
     def predict(self, x):
 
-        for layer in self.layers.values():
-            x = layer.forward(x)
+        x = self.layers[0].forward(x)
+        x = self.layers[1].forward(x)
+        x = self.layers[2].forward(x)
 
         return x
 
     def loss(self, x, t):
         y = self.predict(x)
 
-        return self.lastLayer.forward(y, t)
+        return self.layers[3].forward(y, t)
 
     def accuracy(self, x, t):
         y = self.predict(x)
@@ -44,25 +37,12 @@ class NeuralNet():
 
     def train(self, x, t):
 
-        # forward
         self.loss(x, t)
-
-        # backward
         dout = 1
-        dout = self.lastLayer.backward(dout)
-
-        layers = list(self.layers.values())
-        layers.reverse()
-        for layer in layers:
+        for layer in reversed(self.layers):
             dout = layer.backward(dout)
 
-        grads = {}
-        grads['W1'] = self.layers['Affine1'].dW
-        grads['b1'] = self.layers['Affine1'].db
-        grads['W2'] = self.layers['Affine2'].dW
-        grads['b2'] = self.layers['Affine2'].db
+        reversed(self.layers)
+        self.layers[0].update()
+        self.layers[2].update()
 
-        for key in ('W1', 'b1', 'W2', 'b2'):
-            self.params[key] -= LEARNING_RATE * grads[key]
-
-        return grads
