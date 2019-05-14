@@ -1,6 +1,7 @@
 import numpy as np
 from src.activation_function import softmax, sigmoid
 from src.loss_function import cross_entropy_error
+from src.optimizer import SGD
 
 WEIGHT_INIT_STD = 0.01
 LEARNING_RATE = 0.1
@@ -48,6 +49,8 @@ class AffineLayer:
         self.dW = None
         self.db = None
 
+        # TODO:パラメータとパラメータの傾配は学習で必須なので辞書型で書き直すこと
+
         """"
         # Momentum
         self.momentum = 0.9
@@ -61,6 +64,7 @@ class AffineLayer:
         self.h_b = np.zeros(output_dim)
         self.lr = 0.1
         """
+
 
     def forward(self, x):
         self.x = x
@@ -77,10 +81,14 @@ class AffineLayer:
 
     def train(self):
 
+        sgd = SGD(LEARNING_RATE)
+        sgd.update(self.W, self.dW)
+        sgd.update(self.b, self.db)
+
         #""""
         # SGD
-        self.W -= LEARNING_RATE * self.dW
-        self.b -= LEARNING_RATE * self.db
+        #self.W -= LEARNING_RATE * self.dW
+        #self.b -= LEARNING_RATE * self.db
         #"""
 
         """
