@@ -1,10 +1,11 @@
 import numpy as np
 from src.activation_function import softmax, sigmoid
 from src.loss_function import cross_entropy_error
-from src.optimizer import SGD
+from src.optimizer import SGD, Momentum_SGD
 
 WEIGHT_INIT_STD = 0.01
 LEARNING_RATE = 0.1
+MOMENTUM = 0.9
 
 
 class Layer:
@@ -49,14 +50,16 @@ class AffineLayer:
         self.dW = None
         self.db = None
 
-        # TODO:パラメータとパラメータの傾配は学習で必須なので辞書型で書き直すこと
+        # TODO:パラメータとパラメータの傾配は学習で必須なので辞書型で書き直すこと（やっぱり必要だった）
 
-        """"
+        #""""
         # Momentum
         self.momentum = 0.9
         self.v_W = np.zeros((output_dim, input_dim))
+        #self.v_W = np.zeros(self.W.shape)
         self.v_b = np.zeros(output_dim)
-        """
+        #self.v_b = np.zeros(self.b.shape)
+        #"""
 
         """
         # AdaGrad
@@ -81,24 +84,34 @@ class AffineLayer:
 
     def train(self):
 
+        self.param = {}
+        self.grad_param = {}
+
+        self.param['W'] = self.W
+        self.param['b'] = self.b
+        self.grad_param['dW'] = self.dW
+        self.grad_param['dB'] = self.db
+
+        """
         sgd = SGD(LEARNING_RATE)
         sgd.update(self.W, self.dW)
         sgd.update(self.b, self.db)
+        """
 
-        #""""
-        # SGD
-        #self.W -= LEARNING_RATE * self.dW
-        #self.b -= LEARNING_RATE * self.db
+        #"""
+        mom_sgd = Momentum_SGD(MOMENTUM)
+        mom_sgd.update(self.W, self.dW)
+        mom_sgd.update(self.b, self.db)
         #"""
 
-        """
-        # Momentum
-        self.v_W = self.momentum * self.v_W - 0.01 * self.dW
-        self.W += self.v_W
 
-        self.v_b = self.momentum * self.v_b - 0.01 * self.db
-        self.b += self.v_b
-        """
+        # Momentum_SGD
+        #self.v_W = self.momentum * self.v_W - 0.01 * self.dW
+        #self.W += self.v_W
+
+        #self.v_b = self.momentum * self.v_b - 0.01 * self.db
+        #self.b += self.v_b
+
 
         """
         # AdaGard
