@@ -8,40 +8,6 @@ LEARNING_RATE = 0.1
 MOMENTUM = 0.9
 
 
-class Layer:
-    def __init__(self, output_dim, input_dim, activate_function):
-        self.affine_layer = AffineLayer(output_dim, input_dim)
-        self.activation_layer = self.set_activation_layer(activate_function)
-
-    def set_activation_layer(self, activate_function):
-        if activate_function == 'relu':
-            return ReluLayer()
-        elif activate_function == 'sigmoid':
-            return SigmoidLayer()
-        elif activate_function == 'softmax':
-            return SoftmaxWithLossLayer()
-        else:
-            raise Exception
-
-    def forward(self, x):
-        u = self.affine_layer.forward(x)
-        z = self.activation_layer.forward(u)
-
-        return z
-
-    def backward(self, z):
-        u = self.activation_layer.backward(z)
-        x = self.affine_layer.backward(u)
-
-        return x
-
-    def train(self):
-        self.affine_layer.train()
-
-    def loss(self, t):
-        return self.activation_layer.loss(t)
-
-
 class AffineLayer:
     def __init__(self, output_dim, input_dim):
         self.W = WEIGHT_INIT_STD * np.random.randn(output_dim, input_dim)
@@ -52,14 +18,14 @@ class AffineLayer:
 
         # TODO:パラメータとパラメータの傾配は学習で必須なので辞書型で書き直すこと（やっぱり必要だった）
 
-        #""""
+        """"
         # Momentum
         self.momentum = 0.9
         self.v_W = np.zeros((output_dim, input_dim))
         #self.v_W = np.zeros(self.W.shape)
         self.v_b = np.zeros(output_dim)
         #self.v_b = np.zeros(self.b.shape)
-        #"""
+        """
 
         """
         # AdaGrad
@@ -67,7 +33,6 @@ class AffineLayer:
         self.h_b = np.zeros(output_dim)
         self.lr = 0.1
         """
-
 
     def forward(self, x):
         self.x = x
@@ -83,7 +48,6 @@ class AffineLayer:
         return dx
 
     def train(self):
-
         self.param = {}
         self.grad_param = {}
 
@@ -92,26 +56,24 @@ class AffineLayer:
         self.grad_param['dW'] = self.dW
         self.grad_param['dB'] = self.db
 
-        """
+        # """
         sgd = SGD(LEARNING_RATE)
         sgd.update(self.W, self.dW)
         sgd.update(self.b, self.db)
-        """
+        # """
 
-        #"""
+        """
         mom_sgd = Momentum_SGD(MOMENTUM)
         mom_sgd.update(self.W, self.dW)
         mom_sgd.update(self.b, self.db)
-        #"""
-
+        """
 
         # Momentum_SGD
-        #self.v_W = self.momentum * self.v_W - 0.01 * self.dW
-        #self.W += self.v_W
+        # self.v_W = self.momentum * self.v_W - 0.01 * self.dW
+        # self.W += self.v_W
 
-        #self.v_b = self.momentum * self.v_b - 0.01 * self.db
-        #self.b += self.v_b
-
+        # self.v_b = self.momentum * self.v_b - 0.01 * self.db
+        # self.b += self.v_b
 
         """
         # AdaGard
@@ -123,6 +85,15 @@ class AffineLayer:
         """
 
 
+class ConvLayer:
+    def __init__(self):
+        pass
+
+    def forward(self, x):
+        pass
+
+    def backward(self, x):
+        pass
 
 
 class ReluLayer:
@@ -141,6 +112,9 @@ class ReluLayer:
 
         return dx
 
+    def train(self):
+        pass
+
 
 class SigmoidLayer:
     def __init__(self):
@@ -156,6 +130,9 @@ class SigmoidLayer:
         dx = dout * (1.0 - self.y) * self.y
 
         return dx
+
+    def train(self):
+        pass
 
 
 class SoftmaxWithLossLayer:
@@ -175,3 +152,6 @@ class SoftmaxWithLossLayer:
         batch_size = self.t.shape[1]
         dx = (self.y - self.t) / batch_size
         return dx
+
+    def train(self):
+        pass
