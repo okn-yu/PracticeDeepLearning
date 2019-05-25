@@ -2,6 +2,7 @@ import numpy as np
 from src.activation_function import softmax, sigmoid
 from src.loss_function import cross_entropy_error
 from src.optimizer import SGD, Momentum_SGD
+from src.util import col2im, im2col
 
 WEIGHT_INIT_STD = 0.01
 LEARNING_RATE = 0.1
@@ -86,15 +87,30 @@ class AffineLayer:
 
 
 class ConvLayer:
-    def __init__(self):
-        pass
+    def __init__(self, filter_num, filter_chan, filter_hight, filter_width, pad, stride):
+        self.filter_num = filter_num
+        self.filter_chan = filter_chan
+        self.filter_hight = filter_hight
+        self.filter_width = filter_width
+        self.pad = pad
+        self.stride = stride
 
     def forward(self, x):
-        pass
+        self.x = x
+        self.num , self.chan, self.hight, self.width = x.shape
+
+        out_h = int(((self.hight + 2 * self.pad - self.filter_hight) + 1) / self.stride)
+        out_width = int(((self.width + 2 * self.pad - self.filter_width) + 1) / self.stride)
+
+
+
 
     def backward(self, x):
         pass
 
+
+class PoolingLayer():
+    pass
 
 class ReluLayer:
     def __init__(self):
