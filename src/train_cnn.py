@@ -14,7 +14,30 @@ TRAIN_SIZE = train_data.shape[0]
 BATCH_SIZE = 100
 ITER_PER_EPOC = max(TRAIN_SIZE / BATCH_SIZE, 1)
 
-layer1 = ConvLayer()
+#batch_mask = np.random.choice(TRAIN_SIZE, BATCH_SIZE)
+#x_batch = train_data[batch_mask].T
+#print(x_batch.shape)
+
+
+# for debug
+batch_mask = np.random.choice(TRAIN_SIZE, BATCH_SIZE)
+x_batch = train_data[batch_mask]
+t_batch = train_label[batch_mask]
+
+layer1 = ConvLayer(fil_num=30, fil_chan=1, fil_hight=5, fil_width=5, pad=0, stride=1)
+layer2 = ReluLayer()
+layer3 = PoolingLayer(pool_hight=2, pool_width=2, pad=0, stride=2)
+layer4 = AffineLayer()
+
+
+layers = [layer1, layer2, layer3, layer4]
+
+x = x_batch
+for layer in layers:
+    x = layer.forward(x)
+    #print(x)
+
+"""
 layer2 = ReluLayer()
 layer3 = PoolingLayer()
 layer4 = AffineLayer()
@@ -34,3 +57,5 @@ for i in range(ITERS_NUM):
         train_acc = nnet.test(train_data.T, train_label.T)
         test_acc = nnet.test(test_data.T, test_label.T)
         print("train_acc...%s, test_acc...%s" % (train_acc, test_acc))
+        
+"""
