@@ -13,6 +13,7 @@ class AffineLayer:
     def __init__(self, output_dim, input_dim):
         self.W = WEIGHT_INIT_STD * np.random.randn(output_dim, input_dim)
         self.b = np.zeros(output_dim)
+
         self.x = None
         self.dW = None
         self.db = None
@@ -37,7 +38,17 @@ class AffineLayer:
 
     def forward(self, x):
         self.x = x
+
+        # テンソル対応
+        self.x = x.reshape(x.shape[0], -1)
+
+        # self.x: (100, 4320)
+        # self.W: (100, 4320)
+
         out = np.dot(self.W, self.x) + self.b.reshape(self.W.shape[0], 1)
+        #out = np.dot(self.W, self.x) + self.b
+        #out = np.dot(self.x, self.W)
+        # out.shape: (4320, 4320)
 
         return out
 
@@ -160,6 +171,9 @@ class PoolingLayer():
 
         out = np.max(col, axis=1)
         out = out.reshape(batch_size, output_hight, output_width, chan).transpose(0, 3, 1, 2)
+
+        # out.shape (100, 30, 12, 12)
+        print("pool:out.shape " + str(out.shape))
 
         return out
 

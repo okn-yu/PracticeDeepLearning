@@ -27,12 +27,23 @@ t_batch = train_label[batch_mask]
 layer1 = ConvLayer(fil_num=30, fil_chan=1, fil_hight=5, fil_width=5, pad=0, stride=1)
 layer2 = ReluLayer()
 layer3 = PoolingLayer(pool_hight=2, pool_width=2, pad=0, stride=2)
-layer4 = AffineLayer()
+
+input_size = 28
+filter_size = 5
+filter_pad = 0
+filter_stride = 1
+filter_num = 30
+
+conv_output_size = (input_size - filter_size + 2*filter_pad) / filter_stride + 1
+pool_output_size = int(filter_num * (conv_output_size/2) * (conv_output_size/2))
+hidden_size = 100
+
+layer4 = AffineLayer(hidden_size, pool_output_size)
 
 
 layers = [layer1, layer2, layer3, layer4]
 
-x = x_batch
+x = x_batch.T
 for layer in layers:
     x = layer.forward(x)
     #print(x)
