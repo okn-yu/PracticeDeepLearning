@@ -13,42 +13,13 @@ class AffineLayer:
     def __init__(self, output_dim, input_dim):
         self.W = WEIGHT_INIT_STD * np.random.randn(output_dim, input_dim)
         self.b = np.zeros(output_dim)
-
         self.x = None
         self.dW = None
         self.db = None
 
-        # TODO:パラメータとパラメータの傾配は学習で必須なので辞書型で書き直すこと（やっぱり必要だった）
-
-        """"
-        # Momentum
-        self.momentum = 0.9
-        self.v_W = np.zeros((output_dim, input_dim))
-        #self.v_W = np.zeros(self.W.shape)
-        self.v_b = np.zeros(output_dim)
-        #self.v_b = np.zeros(self.b.shape)
-        """
-
-        """
-        # AdaGrad
-        self.h_W = np.zeros((output_dim, input_dim))
-        self.h_b = np.zeros(output_dim)
-        self.lr = 0.1
-        """
-
     def forward(self, x):
         self.x = x
-
-        # テンソル対応
-        self.x = x.reshape(x.shape[0], -1)
-
-        # self.x: (100, 4320)
-        # self.W: (100, 4320)
-
         out = np.dot(self.W, self.x) + self.b.reshape(self.W.shape[0], 1)
-        #out = np.dot(self.W, self.x) + self.b
-        #out = np.dot(self.x, self.W)
-        # out.shape: (4320, 4320)
 
         return out
 
@@ -60,43 +31,10 @@ class AffineLayer:
         return dx
 
     def train(self):
-        self.param = {}
-        self.grad_param = {}
+        self.W -= LEARNING_RATE * self.dW
+        self.b -= LEARNING_RATE * self.db
 
-        self.param['W'] = self.W
-        self.param['b'] = self.b
-        self.grad_param['dW'] = self.dW
-        self.grad_param['dB'] = self.db
-
-        # """
-        sgd = SGD(LEARNING_RATE)
-        sgd.update(self.W, self.dW)
-        sgd.update(self.b, self.db)
-        # """
-
-        """
-        mom_sgd = Momentum_SGD(MOMENTUM)
-        mom_sgd.update(self.W, self.dW)
-        mom_sgd.update(self.b, self.db)
-        """
-
-        # Momentum_SGD
-        # self.v_W = self.momentum * self.v_W - 0.01 * self.dW
-        # self.W += self.v_W
-
-        # self.v_b = self.momentum * self.v_b - 0.01 * self.db
-        # self.b += self.v_b
-
-        """
-        # AdaGard
-        self.h_W += self.dW * self.dW
-        self.W -= self.lr * self.dW / np.sqrt(self.h_W + 1e-7)
-
-        self.h_b += self.db * self.db
-        self.b -= self.lr * self.db / np.sqrt(self.h_b + 1e-7)
-        """
-
-
+"""
 class ConvLayer:
     def __init__(self, fil_num, fil_chan, fil_hight, fil_width, pad, stride):
         self.fil_num = fil_num
@@ -115,7 +53,7 @@ class ConvLayer:
         self.db = None
 
     def forward(self, x):
-        #batch_size, chan, hight, width = x.shape
+        # batch_size, chan, hight, width = x.shape
         width, hight, chan, batch_size = x.shape
 
         output_hight = int(((hight + 2 * self.pad - self.fil_hight) / self.stride) + 1)
@@ -133,7 +71,7 @@ class ConvLayer:
         # two_dim_W.shape: (25, 30)
 
         out = np.dot(two_dim_W, two_dim_x.T) + self.b.reshape(two_dim_W.shape[0], 1)
-        #out = out.reshape(batch_size, output_hight, output_width, -1).transpose(0, 3, 1, 2)
+        # out = out.reshape(batch_size, output_hight, output_width, -1).transpose(0, 3, 1, 2)
 
         out = out.reshape(output_width, output_hight, -1, batch_size).transpose(0, 3, 1, 2)
 
@@ -179,7 +117,7 @@ class PoolingLayer():
         print("pool:out.shape " + str(out.shape))
 
         return out
-
+"""
 
 class ReluLayer:
     def __init__(self):
