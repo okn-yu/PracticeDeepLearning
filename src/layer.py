@@ -115,7 +115,8 @@ class ConvLayer:
         self.db = None
 
     def forward(self, x):
-        batch_size, chan, hight, width = x.shape
+        #batch_size, chan, hight, width = x.shape
+        width, hight, chan, batch_size = x.shape
 
         output_hight = int(((hight + 2 * self.pad - self.fil_hight) / self.stride) + 1)
         output_width = int(((width + 2 * self.pad - self.fil_width) / self.stride) + 1)
@@ -123,16 +124,18 @@ class ConvLayer:
         # two_dim_x.shape: (batch_size * output_hight * output_width, self.fil_chan * self.fil_size)
         # two_dim_W.shape: (self.fil_chan * self.fil_size, -1)
 
-        two_dim_x = im2col(x, self.fil_hight, self.fil_width, self.stride, self.pad)
+        two_dim_x = im2col(x.T, self.fil_hight, self.fil_width, self.stride, self.pad)
         # two_dim_x.shape: (57600, 25)
-        print(two_dim_x.shape)
+        print("two_dim_x.shape " + str(two_dim_x.shape))
 
-        two_dim_W = self.W.reshape(self.fil_num, -1).T
-        print(two_dim_W.shape)
+        two_dim_W = self.W.reshape(self.fil_num, -1)
+        print("two_dim_W.shape " + str(two_dim_W.shape))
         # two_dim_W.shape: (25, 30)
 
-        out = np.dot(two_dim_x, two_dim_W) + self.b
-        out = out.reshape(batch_size, output_hight, output_width, -1).transpose(0, 3, 1, 2)
+        out = np.dot(two_dim_W, two_dim_x.T) + self.b.reshape(two_dim_W.shape[0], 1)
+        #out = out.reshape(batch_size, output_hight, output_width, -1).transpose(0, 3, 1, 2)
+
+        out = out.reshape(output_width, output_hight, -1, batch_size).transpose(0, 3, 1, 2)
 
         print("out.shape " + str(out.shape))
         # out.shape: (100, 30, 24, 24)
