@@ -34,7 +34,7 @@ class AffineLayer:
         self.W -= LEARNING_RATE * self.dW
         self.b -= LEARNING_RATE * self.db
 
-"""
+
 class ConvLayer:
     def __init__(self, fil_num, fil_chan, fil_hight, fil_width, pad, stride):
         self.fil_num = fil_num
@@ -43,40 +43,28 @@ class ConvLayer:
         self.fil_width = fil_width
         self.pad = pad
         self.stride = stride
+
         self.W = WEIGHT_INIT_STD * np.random.randn(self.fil_num, self.fil_chan, self.fil_hight, self.fil_width)
         self.b = np.zeros(self.fil_num)
 
         self.x = None
         self.col = None
-        self.col_w = None
+        self.col_W = None
+
         self.dW = None
         self.db = None
 
     def forward(self, x):
-        # batch_size, chan, hight, width = x.shape
-        width, hight, chan, batch_size = x.shape
+        batch_size, chan, hight, width = x.shape
 
         output_hight = int(((hight + 2 * self.pad - self.fil_hight) / self.stride) + 1)
         output_width = int(((width + 2 * self.pad - self.fil_width) / self.stride) + 1)
 
-        # two_dim_x.shape: (batch_size * output_hight * output_width, self.fil_chan * self.fil_size)
-        # two_dim_W.shape: (self.fil_chan * self.fil_size, -1)
+        col = im2col(x, self.fil_hight, self.fil_width, self.stride, self.pad)
+        col_W = self.W.reshape(self.fil_num, -1).T
 
-        two_dim_x = im2col(x.T, self.fil_hight, self.fil_width, self.stride, self.pad)
-        # two_dim_x.shape: (57600, 25)
-        print("two_dim_x.shape " + str(two_dim_x.shape))
-
-        two_dim_W = self.W.reshape(self.fil_num, -1)
-        print("two_dim_W.shape " + str(two_dim_W.shape))
-        # two_dim_W.shape: (25, 30)
-
-        out = np.dot(two_dim_W, two_dim_x.T) + self.b.reshape(two_dim_W.shape[0], 1)
-        # out = out.reshape(batch_size, output_hight, output_width, -1).transpose(0, 3, 1, 2)
-
-        out = out.reshape(output_width, output_hight, -1, batch_size).transpose(0, 3, 1, 2)
-
-        print("out.shape " + str(out.shape))
-        # out.shape: (100, 30, 24, 24)
+        out = np.dot(col, col_W) + self.b
+        out = out.reshape(batch_size, output_hight, output_width, -1).transpose(0, 3, 1, 2)
 
         return out
 
@@ -87,7 +75,7 @@ class ConvLayer:
         self.dW = np.dot(self.col.T, dout)
         self.dW = self.dW.transpose(1, 0).reshape(self.fil_num, self.fil_chan, self.fil_hight, self.fil_width)
 
-        dcol = np.dot(dout, self.col_w.T)
+        dcol = np.dot(dout, self.col_W.T)
         dx = col2im(dcol, self.x.shape, self.fil_hight, self.fil_width, self.stride, self.pad)
 
         return dx
@@ -117,7 +105,7 @@ class PoolingLayer():
         print("pool:out.shape " + str(out.shape))
 
         return out
-"""
+
 
 class ReluLayer:
     def __init__(self):

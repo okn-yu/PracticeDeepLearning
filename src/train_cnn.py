@@ -14,10 +14,6 @@ TRAIN_SIZE = train_data.shape[0]
 BATCH_SIZE = 100
 ITER_PER_EPOC = max(TRAIN_SIZE / BATCH_SIZE, 1)
 
-#batch_mask = np.random.choice(TRAIN_SIZE, BATCH_SIZE)
-#x_batch = train_data[batch_mask].T
-#print(x_batch.shape)
-
 
 # for debug
 batch_mask = np.random.choice(TRAIN_SIZE, BATCH_SIZE)
