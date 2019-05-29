@@ -18,7 +18,9 @@ class AffineLayer:
         self.db = None
 
     def forward(self, x):
-        self.x = x
+        self.original_x_shape = x.shape
+        self.x = x.reshape(x.shape[0], -1)
+
         out = np.dot(self.x, self.W) + self.b
 
         return out
@@ -28,6 +30,8 @@ class AffineLayer:
         self.db = np.sum(dout, axis=0)
 
         dx = np.dot(dout, self.W.T)
+        dx = dx.reshape(*self.original_x_shape)
+
         return dx
 
     def train(self):
@@ -66,6 +70,10 @@ class ConvLayer:
         out = np.dot(col, col_W) + self.b
         out = out.reshape(batch_size, output_hight, output_width, -1).transpose(0, 3, 1, 2)
 
+        self.x = x
+        self.col = col
+        self.col_W = col_W
+
         return out
 
     def backward(self, dout):
@@ -80,6 +88,10 @@ class ConvLayer:
 
         return dx
 
+    def train(self):
+        self.W -= LEARNING_RATE * self.dW
+        self.b -= LEARNING_RATE * self.db
+
 
 class PoolingLayer():
     def __init__(self, pool_hight, pool_width, pad, stride):
@@ -89,7 +101,6 @@ class PoolingLayer():
         self.stride = stride
 
     def forward(self, x):
-        print("x.shape " + str(x.shape))
         batch_size, chan, hight, width = x.shape
 
         output_hight = int(((hight - self.pool_hight) / self.stride) + 1)
@@ -98,13 +109,30 @@ class PoolingLayer():
         col = im2col(x, self.pool_hight, self.pool_width, self.stride, self.pad)
         col = col.reshape(-1, self.pool_hight * self.pool_width)
 
+        arg_max = np.argmax(col, axis=1)
         out = np.max(col, axis=1)
         out = out.reshape(batch_size, output_hight, output_width, chan).transpose(0, 3, 1, 2)
 
-        # out.shape (100, 30, 12, 12)
-        print("pool:out.shape " + str(out.shape))
+        self.x = x
+        self.arg_max = arg_max
 
         return out
+
+    def backward(self, dout):
+        dout = dout.transpose(0, 2, 3, 1)
+
+        pool_size = self.pool_hight * self.pool_width
+        dmax = np.zeros((dout.size, pool_size))
+        dmax[np.arange(self.arg_max.size), self.arg_max.flatten()] = dout.flatten()
+        dmax = dmax.reshape(dout.shape + (pool_size,))
+
+        dcol = dmax.reshape(dmax.shape[0] * dmax.shape[1] * dmax.shape[2], -1)
+        dx = col2im(dcol, self.x.shape, self.pool_hight, self.pool_width, self.stride, self.pad)
+
+        return dx
+
+    def train(self):
+        pass
 
 
 class ReluLayer:
@@ -161,7 +189,14 @@ class SoftmaxWithLossLayer:
 
     def backward(self, dout=1):
         batch_size = self.t.shape[0]
-        dx = (self.y - self.t) / batch_size
+
+        if self.t.size == self.y.size:  # 教師データがone-hot-vectorの場合
+            dx = (self.y - self.t) / batch_size
+        else:
+            dx = self.y.copy()
+            dx[np.arange(batch_size), self.t] -= 1
+            dx = dx / batch_size
+
         return dx
 
     def train(self):
