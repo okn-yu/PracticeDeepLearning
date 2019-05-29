@@ -10,8 +10,8 @@ MOMENTUM = 0.9
 
 
 class AffineLayer:
-    def __init__(self, output_dim, input_dim):
-        self.W = WEIGHT_INIT_STD * np.random.randn(output_dim, input_dim)
+    def __init__(self, input_dim, output_dim):
+        self.W = WEIGHT_INIT_STD * np.random.randn(input_dim, output_dim)
         self.b = np.zeros(output_dim)
         self.x = None
         self.dW = None
@@ -19,15 +19,15 @@ class AffineLayer:
 
     def forward(self, x):
         self.x = x
-        out = np.dot(self.W, self.x) + self.b.reshape(self.W.shape[0], 1)
+        out = np.dot(self.x, self.W) + self.b
 
         return out
 
     def backward(self, dout):
-        self.dW = np.dot(dout, self.x.T)
-        self.db = np.sum(dout, axis=1)
+        self.dW = np.dot(self.x.T, dout)
+        self.db = np.sum(dout, axis=0)
 
-        dx = np.dot(self.W.T, dout)
+        dx = np.dot(dout, self.W.T)
         return dx
 
     def train(self):
@@ -172,7 +172,7 @@ class SoftmaxWithLossLayer:
         return cross_entropy_error(self.y, self.t)
 
     def backward(self, dout=1):
-        batch_size = self.t.shape[1]
+        batch_size = self.t.shape[0]
         dx = (self.y - self.t) / batch_size
         return dx
 

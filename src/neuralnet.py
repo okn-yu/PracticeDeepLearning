@@ -34,8 +34,8 @@ class NeuralNet():
 
     def test(self, x, t):
         y = self._forward(x)
-        y = np.argmax(y, axis=0)
-        t = np.argmax(t, axis=0)
+        y = np.argmax(y, axis=1)
+        t = np.argmax(t, axis=1)
 
-        accuracy = (np.sum(y == t) / float(x.shape[1]))
+        accuracy = (np.sum(y == t) / float(x.shape[0]))
         return accuracy

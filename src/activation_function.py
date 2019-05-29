@@ -11,12 +11,11 @@ def sigmoid(x):
 
 def softmax(x):
     # if x  == matrix
-    # TODO: modify 'x.T -> x'. and 'y.T -> y'.
     if x.ndim == 2:
-        x = x
+        x = x.T
         x = x - np.max(x, axis=0)
         y = np.exp(x) / np.sum(np.exp(x), axis=0)
-        return y
+        return y.T
     # if x == vector
     else:
         x = x - np.max(x)
