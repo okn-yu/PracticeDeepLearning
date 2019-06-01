@@ -60,12 +60,14 @@ class ConvLayer:
 
     def forward(self, x):
         batch_size, chan, hight, width = x.shape
+        #print(x.shape)
 
         output_hight = int(((hight + 2 * self.pad - self.fil_hight) / self.stride) + 1)
         output_width = int(((width + 2 * self.pad - self.fil_width) / self.stride) + 1)
 
         col = im2col(x, self.fil_hight, self.fil_width, self.stride, self.pad)
         col_W = self.W.reshape(self.fil_num, -1).T
+        #print(col.shape, col_W.shape)
 
         out = np.dot(col, col_W) + self.b
         out = out.reshape(batch_size, output_hight, output_width, -1).transpose(0, 3, 1, 2)
@@ -74,6 +76,7 @@ class ConvLayer:
         self.col = col
         self.col_W = col_W
 
+        #print(out.shape)
         return out
 
     def backward(self, dout):
