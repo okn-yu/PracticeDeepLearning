@@ -62,11 +62,18 @@ class ConvLayer:
         batch_size, chan, hight, width = x.shape
         #print(x.shape)
 
+        assert chan == self.fil_chan
+
         output_hight = int(((hight + 2 * self.pad - self.fil_hight) / self.stride) + 1)
         output_width = int(((width + 2 * self.pad - self.fil_width) / self.stride) + 1)
+        #print(output_hight, output_width)
 
         col = im2col(x, self.fil_hight, self.fil_width, self.stride, self.pad)
+        # col.shape: (?, chan * self.fil_hight * self.fil_width)
+
         col_W = self.W.reshape(self.fil_num, -1).T
+        # col_W.shape: (self.fil_chan * self.fil_hight * self.fil_width, self.fil_num)
+
         #print(col.shape, col_W.shape)
 
         out = np.dot(col, col_W) + self.b
@@ -119,6 +126,7 @@ class PoolingLayer():
         self.x = x
         self.arg_max = arg_max
 
+        #print(out.shape)
         return out
 
     def backward(self, dout):
